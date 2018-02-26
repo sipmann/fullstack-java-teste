@@ -1,4 +1,4 @@
-package br.com.lemontech.components;
+package br.com.lemontech.services;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.lemontech.factory.ViagemFactory;
 import br.com.lemontech.model.*;
 import br.com.lemontech.selfbooking.wsselfbooking.beans.Solicitacao;
 import br.com.lemontech.selfbooking.wsselfbooking.beans.aereo.Aereo;
@@ -28,10 +29,13 @@ import br.com.lemontech.selfbooking.wsselfbooking.services.response.PesquisarSol
  *
  */
 @Component
-public class RequisicoesConsumer {
+public class ViagemService {
 	
 	@Autowired
 	PersistService persist;
+	
+	@Autowired
+	ViagemFactory viagem;
 	
 	/**
 	 * Retorna um list das viagens vindas do WS. Encaminha os dados para armazenamento
@@ -55,7 +59,7 @@ public class RequisicoesConsumer {
 		PesquisarSolicitacaoResponse resp = port.pesquisarSolicitacao("base_teste_qa",
 				"f13aa9347eeedb0e4e80772a56af21a5", "5ad47c2a43da64c5d7a42ee6b03dae36", req);
 
-		List<Viagem> lst = parseSolicitacao(resp.getSolicitacao());;
+		List<Viagem> lst = gerarViagensAPartirDe(resp.getSolicitacao());;
 		
 		persist.armazena(lst);
 		
@@ -68,22 +72,23 @@ public class RequisicoesConsumer {
 	 * @return
 	 * @throws Exception
 	 */
-	private List<Viagem> parseSolicitacao(List<Solicitacao> sols) throws Exception {
+	private List<Viagem> gerarViagensAPartirDe(List<Solicitacao> sols) throws Exception {
 		List<Viagem> lst = new ArrayList<>();
 		
 		for (Solicitacao sol: sols) {
 			try {
-				Aereo aereo = retornAero(sol);
-				AereoSeguimento seg = retornAeroSeg(aereo);
+				Aereo aereo = retornCiaAerea(sol);
+				AereoSeguimento seg = retornSegmentoViagem(aereo);
 				
-				lst.add(new Viagem(sol.getIdSolicitacao(), 
-						sol.getSolicitante().getNome(),
-						aereo.getSource(),
-						getDateFromGregorian(seg.getDataSaida()),
-						getDateFromGregorian(seg.getDataChegada()),
-						seg.getCidadeOrigem(),
-						seg.getCidadeDestino()
-						));
+				viagem.Id(sol.getIdSolicitacao())
+				.Nome(sol.getSolicitante().getNome())
+				.Ciaaerea(aereo.getSource())
+				.Dhsaida(getDateFromGregorian(seg.getDataSaida()))
+				.Dhchegada(getDateFromGregorian(seg.getDataChegada()))
+				.Cidadeorigem(seg.getCidadeOrigem())
+				.Cidadedestino(seg.getCidadeDestino());
+				
+				lst.add(viagem.build());
 			} catch(Exception ex) {
 				//TODO log system
 			}
@@ -92,14 +97,14 @@ public class RequisicoesConsumer {
 		return lst;
 	}
 
-	private Aereo retornAero(Solicitacao sol) throws Exception {
+	private Aereo retornCiaAerea(Solicitacao sol) throws Exception {
 		if (sol.getAereos() != null && sol.getAereos().getAereo().size() > 0)
 			return sol.getAereos().getAereo().get(0);
 		else
 			throw new Exception("Solicitação " + sol.getIdSolicitacao() + " sem aereos");
 	}
 	
-	private AereoSeguimento retornAeroSeg(Aereo aereo) throws Exception {
+	private AereoSeguimento retornSegmentoViagem(Aereo aereo) throws Exception {
 		if (aereo.getAereoSeguimento().size() > 0)
 			return aereo.getAereoSeguimento().get(0);
 		else

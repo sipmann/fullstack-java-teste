@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.lemontech.components.PersistService;
 import br.com.lemontech.model.Viagem;
+import br.com.lemontech.services.PersistService;
 
 /**
  * Controller que realiza a persistencia em banco de dados do que for recebido. 

@@ -1,4 +1,4 @@
-package br.com.lemontech.components;
+package br.com.lemontech.services;
 
 import java.util.List;
 

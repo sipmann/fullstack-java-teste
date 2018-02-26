@@ -9,9 +9,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.lemontech.components.RequisicoesConsumer;
 import br.com.lemontech.dao.ViagemDAO;
 import br.com.lemontech.model.Viagem;
+import br.com.lemontech.services.ViagemService;
 
 /**
  * Controller de listagem de viagens. Responsável pela chamada do processo de
@@ -29,7 +29,7 @@ public class ViagemController {
 	private ViagemDAO dao;
 	
 	@Autowired
-	private RequisicoesConsumer wsConsumer;
+	private ViagemService viagemService;
 
 	/**
 	 * Realiza a chamada da consulta ao WS e encaminha os dados para o view
@@ -40,7 +40,7 @@ public class ViagemController {
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView listagem() throws Exception {
 		
-		List<Viagem> lst = wsConsumer.getViagens(10);
+		List<Viagem> lst = viagemService.getViagens(10);
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listagem", lst);

@@ -6,7 +6,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @EnableWebMvc
-@ComponentScan(basePackages= {"br.com.lemontech.controller", "br.com.lemontech.dao", "br.com.lemontech.utils", "br.com.lemontech.components"})
+@ComponentScan(basePackages= {"br.com.lemontech.controller", "br.com.lemontech.dao", "br.com.lemontech.utils",
+		"br.com.lemontech.services", "br.com.lemontech.factory"})
 public class AppWebConfiguration {
 
 	@Bean
