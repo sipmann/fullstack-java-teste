@@ -3,12 +3,7 @@ package br.com.lemontech.services;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,6 +32,9 @@ public class ViagemService {
 	@Autowired
 	ViagemFactory viagem;
 	
+	@Autowired
+	DateService dateService;
+	
 	/**
 	 * Retorna um list das viagens vindas do WS. Encaminha os dados para armazenamento
 	 * @param mesesRetroativo int de quantos meses retroativo pegar os dados.
@@ -50,8 +48,8 @@ public class ViagemService {
 		c.add(Calendar.MONTH, mesesRetroativo * -1);
 
 		PesquisarSolicitacaoRequest req = new PesquisarSolicitacaoRequest();
-		req.setDataInicial(getGregorianFromMilis(c.getTimeInMillis()));
-		req.setDataFinal(getGregorianFromMilis(d.getTime()));
+		req.setDataInicial(dateService.getGregorianFromMilis(c.getTimeInMillis()));
+		req.setDataFinal(dateService.getGregorianFromMilis(d.getTime()));
 		req.setRegistroInicial(1);
 
 		WsSelfBooking port = new WsSelfBookingService().getWsSelfBookingPort();
@@ -83,8 +81,8 @@ public class ViagemService {
 				viagem.Id(sol.getIdSolicitacao())
 				.Nome(sol.getSolicitante().getNome())
 				.Ciaaerea(aereo.getSource())
-				.Dhsaida(getDateFromGregorian(seg.getDataSaida()))
-				.Dhchegada(getDateFromGregorian(seg.getDataChegada()))
+				.Dhsaida(dateService.getDateFromGregorian(seg.getDataSaida()))
+				.Dhchegada(dateService.getDateFromGregorian(seg.getDataChegada()))
 				.Cidadeorigem(seg.getCidadeOrigem())
 				.Cidadedestino(seg.getCidadeDestino());
 				
@@ -109,31 +107,5 @@ public class ViagemService {
 			return aereo.getAereoSeguimento().get(0);
 		else
 			throw new Exception("Aero " + aereo.getId() + " sem aereosSegmentos");
-	}
-
-	/**
-	 * Utilitário de transformação de valores/data
-	 * @param millisecond Eg: new Date().getTime();
-	 * @return
-	 */
-	private XMLGregorianCalendar getGregorianFromMilis(Long millisecond) {
-		try {
-			GregorianCalendar dt = new GregorianCalendar();
-			dt.setTimeInMillis(millisecond);
-			return DatatypeFactory.newInstance().newXMLGregorianCalendar(dt);
-		} catch (DatatypeConfigurationException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	
-	/**
-	 * Utilitário de transformação de valores/data
-	 * @param greg
-	 * @return
-	 */
-	private java.sql.Date getDateFromGregorian(XMLGregorianCalendar greg) {
-		java.sql.Date d = new java.sql.Date(greg.getMillisecond());
-		return d;
 	}
 }
