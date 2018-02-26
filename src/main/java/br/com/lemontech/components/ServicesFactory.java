@@ -15,8 +15,8 @@ public class ServicesFactory {
 	@Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public PersistService getPersistService() {
 		//TODO check if rabbit on variable
-		String habbit = SysOpts.env("RABBITHOST", "");
-		if (habbit.equals(""))
+		String rabbit = SysOpts.env("RABBITHOST", "");
+		if (rabbit.equals(""))
 			return new PersistLocal();
 		else
 			return null;
