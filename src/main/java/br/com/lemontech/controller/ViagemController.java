@@ -39,7 +39,7 @@ public class ViagemController {
 	 */
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView listagem() throws Exception {
-		List<Viagem> lst = viagemService.getViagens(10);
+		List<Viagem> lst = viagemService.getViagens(3);
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listagem", lst);

@@ -17,6 +17,7 @@ import br.com.lemontech.selfbooking.wsselfbooking.services.WsSelfBooking;
 import br.com.lemontech.selfbooking.wsselfbooking.services.WsSelfBookingService;
 import br.com.lemontech.selfbooking.wsselfbooking.services.request.PesquisarSolicitacaoRequest;
 import br.com.lemontech.selfbooking.wsselfbooking.services.response.PesquisarSolicitacaoResponse;
+import br.com.lemontech.utils.SysOpts;
 
 /**
  * Consumidor do WS e responsável por encaminhar os dados para o banco
@@ -54,8 +55,10 @@ public class ViagemService {
 
 		WsSelfBooking port = new WsSelfBookingService().getWsSelfBookingPort();
 		//TODO configuration from somewhere else
-		PesquisarSolicitacaoResponse resp = port.pesquisarSolicitacao("base_teste_qa",
-				"f13aa9347eeedb0e4e80772a56af21a5", "5ad47c2a43da64c5d7a42ee6b03dae36", req);
+		
+		PesquisarSolicitacaoResponse resp = port.pesquisarSolicitacao(SysOpts.env("applicationkeyClient", "base_teste_qa"),
+				SysOpts.env("applicationUser", "f13aa9347eeedb0e4e80772a56af21a5"),
+				SysOpts.env("applicationPassword","5ad47c2a43da64c5d7a42ee6b03dae36"), req);
 
 		List<Viagem> lst = gerarViagensAPartirDe(resp.getSolicitacao());;
 		
