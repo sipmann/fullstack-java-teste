@@ -25,6 +25,8 @@ import br.com.lemontech.services.ViagemService;
 @RequestMapping("/viagens")
 public class ViagemController {
 
+	private final String viewName = "viagens/listagem";
+	
 	@Autowired
 	private ViagemDAO dao;
 	
@@ -43,7 +45,7 @@ public class ViagemController {
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listagem", lst);
-		mv.setViewName("viagens/listagem");
+		mv.setViewName(viewName);
 		return mv;
 	}
 
@@ -57,7 +59,7 @@ public class ViagemController {
 		List<Viagem> lst = dao.listar();
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listagem", lst);
-		mv.setViewName("viagens/listagem");
+		mv.setViewName(viewName);
 		return mv;
 	}
 }

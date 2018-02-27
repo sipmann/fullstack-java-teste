@@ -1,10 +1,14 @@
+// mvn -Dtest=BasicTests test
+/**
+ * Melhorias, configuração de banco para testes, não usar o oficial obviamente
+ * Validação do model que é exibido na view
+ */
+
 package br.com.lemontech.tests;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,11 +22,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import br.com.lemontech.config.AppWebConfiguration;
 import br.com.lemontech.config.JPAConfiguration;
 import br.com.lemontech.controller.ViagemController;
-import br.com.lemontech.model.Viagem;
-import br.com.lemontech.services.ViagemService;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -45,7 +45,6 @@ public class BasicTests {
                 .build();
     }
 
-    
     @Test
     public void testSimplesGET() throws Exception {
         mockMvc.perform(get("/viagens"))
@@ -54,11 +53,17 @@ public class BasicTests {
                 .andExpect(forwardedUrl("/WEB-INF/views/viagens/listagem.jsp"));
     }
     
-    
+    @Test
+    public void testSimplesGETFromDb() throws Exception {
+        mockMvc.perform(get("/viagens/fromdb"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("viagens/listagem"))
+                .andExpect(forwardedUrl("/WEB-INF/views/viagens/listagem.jsp"));
+    }
     
     private ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/vies/");
+        viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
