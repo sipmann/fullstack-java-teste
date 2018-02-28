@@ -56,3 +56,35 @@ A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor WildF
 * Hibernate 4.3
 * Spring-Orm 4.1
 * Spring-Mvc 4.1
+
+
+
+
+# Script 
+
+Para fazer um build e subir as imagens docker todas de uma vez, o script a baixo é para isto.
+
+
+# Build local
+
+```shell
+mvn clean package
+
+docker build . -t sip-viagens
+
+docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
+
+docker run -d --name rabbit rabbitmq:3
+
+docker run -d --link rabbit:rabbit --link db:db --name webapp -p 8080:8080 -e "RABBITHOST=rabbit" -e "appMysqlHost=db:3306" -e "appMysqlPass=senha-mysql" sip-viagens
+```
+
+# Scrip para imagem publicada
+
+```shell
+docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
+
+docker run -d --name rabbit rabbitmq:3
+
+docker run -d --link rabbit:rabbit --link db:db --name webapp -p 8080:8080 -e "RABBITHOST=rabbit" -e "appMysqlHost=db:3306" -e "appMysqlPass=senha-mysql" sipmann/viagem
+```

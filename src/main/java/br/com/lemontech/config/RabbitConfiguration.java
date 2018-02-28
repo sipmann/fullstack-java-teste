@@ -1,5 +1,6 @@
 package br.com.lemontech.config;
 
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -40,6 +41,7 @@ public class RabbitConfiguration {
 	public SimpleRabbitListenerContainerFactory rabbitListenerContainerlistenerFactory() {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory());
+		factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return factory;
 	}
 }
