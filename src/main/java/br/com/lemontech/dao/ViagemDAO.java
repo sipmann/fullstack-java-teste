@@ -18,7 +18,7 @@ public class ViagemDAO {
 	private EntityManager manager;
 	
 	public void gravar(Viagem obj) {
-		manager.persist(obj);
+		manager.merge(obj);
 	}
 	
 	public void gravar(List<Viagem> obj) {
