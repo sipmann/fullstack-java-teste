@@ -38,8 +38,8 @@ public class JPAConfiguration {
 		
 		DriverManagerDataSource ds = new DriverManagerDataSource();
 		ds.setUsername(SysOpts.env("appMysqlUser", "root"));
-		ds.setPassword(SysOpts.env("appMysqlPass", "senha-mysql"));
-		ds.setUrl("jdbc:mysql://"+SysOpts.env("appMysqlHost", "159.65.235.185:3306")+SysOpts.env("appMysqlDB", "/viagens"));
+		ds.setPassword(SysOpts.env("appMysqlPass", ""));
+		ds.setUrl("jdbc:mysql://"+SysOpts.env("appMysqlHost", "localhost:3306")+SysOpts.env("appMysqlDB", "/viagens"));
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		factory.setDataSource(ds);
 		

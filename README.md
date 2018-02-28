@@ -22,7 +22,7 @@ Para rodar utilizando docker é possível utilizar uma imagem já compilada e di
 docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
 
 docker run -d --name viagemapp -p 8080:8080 --link db:db -e "applicationkeyClient=KEYCLIENT" \
--e "applicationUser=USERNAME" -e "applicationPassword=PASS" -e "appMysqlHost=localhost:3306" \
+-e "applicationUser=USERNAME" -e "applicationPassword=PASS" -e "appMysqlHost=db:3306" \
 -e "appMysqlDB=viagens" -e "appMysqlUser=root" -e "appMysqlPass=senha-mysql" sipmann/viagem
 ```
 
