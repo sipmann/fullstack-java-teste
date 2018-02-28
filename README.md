@@ -19,7 +19,7 @@ Para rodar utilizando docker é possível utilizar uma imagem já compilada e di
 ```shell
 #docker build . -t viagem
 
-docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" mysql/mysql-server:latest
+docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
 
 docker run -d --name viagemapp -p 8080:8080 --link db:db -e "applicationkeyClient=KEYCLIENT" \
 -e "applicationUser=USERNAME" -e "applicationPassword=PASS" -e "appMysqlHost=localhost:3306" \
@@ -49,7 +49,7 @@ Variáveis de ambiente observadas pela aplicação:
 
 # Arquitetura
 
-A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor WildFly Swarm com persistencia de dados em um banco MySQL. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
+A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor WildFly Swarm com persistencia de dados em um banco MariaDB. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
 
 * JDK 8
 * JSP 2.1

@@ -13,6 +13,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import br.com.lemontech.utils.SysOpts;
+
 @EnableTransactionManagement
 public class JPAConfiguration {
 
@@ -35,9 +37,9 @@ public class JPAConfiguration {
 		factory.setJpaVendorAdapter(vendorAdapter);
 		
 		DriverManagerDataSource ds = new DriverManagerDataSource();
-		ds.setUsername("root");
-		ds.setPassword("");
-		ds.setUrl("jdbc:mysql://localhost:3306/viagens");
+		ds.setUsername(SysOpts.env("appMysqlUser", "root"));
+		ds.setPassword(SysOpts.env("appMysqlPass", "senha-mysql"));
+		ds.setUrl("jdbc:mysql://"+SysOpts.env("appMysqlHost", "159.65.235.185:3306")+SysOpts.env("appMysqlDB", "/viagens"));
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		factory.setDataSource(ds);
 		
