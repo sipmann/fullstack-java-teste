@@ -6,7 +6,7 @@ Sistema desenvolvido para realizar o consumo do WebService de requisições de v
 
 Para utilizar temos duas principais possibilidades que podem ser vistas abaixo. Em ambas as possibilidades se faz necessário configurar as propriedades da aplicação que vão desde usuário e senha para consumir o WebService até os dados de acesso ao banco de dados.
 
-Uma vez rodando o serviço, deve-se acessar a URL da aplicação na porta especificada, ex: `localhost:8080/viagens` e aguardar o consumo do serviço. Existe também a url `localhost:8080/viagens/fromdb` que irá realizar a listagem diretamente do banco.
+Uma vez rodando o serviço, deve-se acessar a URL da aplicação na porta especificada, ex: `localhost:8080/fullstack-java-teste/viagens` e aguardar o consumo do serviço. Existe também a url `localhost:8080/fullstack-java-teste/viagens/fromdb` que irá realizar a listagem diretamente do banco. E também a url `localhost:8080/fullstack-java-teste/viagens/dez` que listará dos últimos dez meses.
 
 ## Build e run
 
@@ -30,9 +30,9 @@ Se desejar rodar o serviço juntamente com o Rabbitmq, é necessário rodar o co
 
 ## Configuração
 
-A configuração da aplicação se da por viriáveis de ambiente. Para uma aplicação distribuída, o ideal é obter as configurações de um serviço especializado para tal, podendo ser um serviço Consul ou outro serviço semelhante. Esta configuração centralizada em um serviço, propicia um melhor controle geral das configs.
+A configuração da aplicação se dá por variáveis de ambiente. Para uma aplicação distribuída, o ideal é obter as configurações de um serviço especializado para tal, podendo ser um serviço Consul ou outro serviço semelhante. Esta configuração centralizada em um serviço propicia um melhor controle geral das configs.
 
-Para fins de uso simplificado, a criação das tabelas esta marcada para rodar juntamente com a aplicação e o Hibernate, mas o database já deve vir criado. Caso seja do interesse rodar a criação manualmente o script esta no repositório com o nome de create.sql.
+Para fins de uso simplificado, a criação das tabelas está marcada para rodar juntamente com a aplicação e o Hibernate, mas o database já deve vir criado. Caso seja do interesse rodar a criação manualmente o script está no repositório com o nome de create.sql.
 
 Variáveis de ambiente observadas pela aplicação:
 
@@ -49,15 +49,13 @@ Variáveis de ambiente observadas pela aplicação:
 
 # Arquitetura
 
-A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor TomCat8 Swarm com persistencia de dados em um banco MariaDB. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
+A arquitetura consiste em uma aplicação Java EE7 rodando em um servidor TomCat8 Swarm com persistência de dados em um banco MariaDB. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente através de uma DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo:
 
 * JDK 8
 * JSP 2.1
 * Hibernate 4.3
 * Spring-Orm 4.1
 * Spring-Mvc 4.1
-
-
 
 
 # Script 
@@ -75,11 +73,12 @@ docker build . -t sip-viagens
 docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
 
 docker run -d --name rabbit rabbitmq:3
+#docker run -d --name rabbit -p 8080:15672 rabbitmq:3-management
 
 docker run -d --link rabbit:rabbit --link db:db --name webapp -p 8080:8080 -e "RABBITHOST=rabbit" -e "appMysqlHost=db:3306" -e "appMysqlPass=senha-mysql" sip-viagens
 ```
 
-# Scrip para imagem publicada
+# Scrip para a imagem publicada
 
 ```shell
 docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" -e MYSQL_DATABASE=viagens mariadb:latest
