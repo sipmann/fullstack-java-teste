@@ -41,6 +41,7 @@ public class RabbitConfiguration {
 	public SimpleRabbitListenerContainerFactory rabbitListenerContainerlistenerFactory() {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory());
+		factory.setPrefetchCount(1);
 		factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return factory;
 	}

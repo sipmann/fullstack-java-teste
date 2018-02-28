@@ -14,19 +14,23 @@ import br.com.lemontech.model.Viagem;
 @EnableRabbit
 @Component
 public class RabbitConsumer {
-	
+
 	@Autowired
 	private ViagemDAO dao;
-	
+
 	/**
-	 * Metodo responsavel por consumir o a mensagem do servico do rabbit
-	 * Recebe um map para futuras implementacoes que venham a ser necessarias
+	 * Metodo responsavel por consumir o a mensagem do servico do rabbit Recebe um
+	 * map para futuras implementacoes que venham a ser necessarias
+	 * 
 	 * @param messageObj
 	 */
 	@RabbitListener(queues = Constants.VIAGEM_LISTA)
 	public void processaMensagem(Map<String, Object> messageObj) {
-		System.out.println("Caiu aqui");
-		System.out.println(((Viagem) messageObj.get("viagem")).getNome());
-		dao.gravar((Viagem) messageObj.get("viagem"));
+		try {
+			System.out.println("Passag: " + ((Viagem) messageObj.get("viagem")).getNome());
+			dao.gravar((Viagem) messageObj.get("viagem"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

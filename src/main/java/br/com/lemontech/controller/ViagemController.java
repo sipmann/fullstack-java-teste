@@ -26,10 +26,10 @@ import br.com.lemontech.services.ViagemService;
 public class ViagemController {
 
 	private final String viewName = "viagens/listagem";
-	
+
 	@Autowired
 	private ViagemDAO dao;
-	
+
 	@Autowired
 	private ViagemService viagemService;
 
@@ -37,12 +37,28 @@ public class ViagemController {
 	 * Realiza a chamada da consulta ao WS e encaminha os dados para o view
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listagem() throws Exception {
 		List<Viagem> lst = viagemService.getViagens(3);
-		
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("listagem", lst);
+		mv.setViewName(viewName);
+		return mv;
+	}
+
+	/**
+	 * Realiza a listagem diretamente do banco de dados.
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("/dez")
+	public ModelAndView listagemDezMeses() throws Exception {
+		List<Viagem> lst = viagemService.getViagens(10);
+
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listagem", lst);
 		mv.setViewName(viewName);

@@ -10,7 +10,7 @@ Uma vez rodando o serviço, deve-se acessar a URL da aplicação na porta especi
 
 ## Build e run
 
-Rode um package `mvn package` e em seguida rode o .jar com o WildFly empacotado `java -jar fullstack-java-teste-swarm.jar` e basta acessar *localhost:8080*.
+Rode um package `mvn package` e em seguida faça o deploy da aplicação .war no seu TomCat8.
 
 ## Docker
 
@@ -49,7 +49,7 @@ Variáveis de ambiente observadas pela aplicação:
 
 # Arquitetura
 
-A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor WildFly Swarm com persistencia de dados em um banco MariaDB. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
+A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor TomCat8 Swarm com persistencia de dados em um banco MariaDB. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
 
 * JDK 8
 * JSP 2.1
