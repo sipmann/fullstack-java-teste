@@ -1,58 +1,58 @@
-# Por que trabalhar na Lemontech
+# Sistema de Viagens
 
-A Lemontech é uma empresa especializada no desenvolvimento de softwares que contribuem na Gestão das Viagens Corporativas.
-Têm como principais objetivos, reduzir custos e tornar os processos mais dinâmicos.
-O Sistema Lemontech, é utilizado por corporações e agências de viagens que buscam economia, eficiência e automação dos seus negócios.ditamos no poder da tecnologia para melhorar continuamente a vida das pessoas. 
+Sistema desenvolvido para realizar o consumo do WebService de requisições de viagens. Este consumo é então armazenado em um banco ou enviado para uma fila para que seja armazenado por um dos consumidores (se assim for configurado).
 
-Se você tem espírito e comportamento empreendedor, muita disposição e proatividade para trabalhar em uma empresa em franca expansão, você é um forte candidato :)
+# Utilização
 
-Como Desenvolvedor Full-stack você irá atuar no desenvolvimento de soluções em arquitetura Java Web MVC, Java EE, integrações com outros sistemas (SOAP, REST, JMS) e soluções escaláveis, participando de todo o processo de desenvolvimento, desde tomadas de decisões à codificação e testes.
+Para utilizar temos duas principais possibilidades que podem ser vistas abaixo. Em ambas as possibilidades se faz necessário configurar as propriedades da aplicação que vão desde usuário e senha para consumir o WebService até os dados de acesso ao banco de dados.
 
-# O que preciso fazer?
+Uma vez rodando o serviço, deve-se acessar a URL da aplicação na porta especificada, ex: `localhost:8080/viagens` e aguardar o consumo do serviço. Existe também a url `localhost:8080/viagens/fromdb` que irá realizar a listagem diretamente do banco.
 
-Vamos ser práticos e diretos, se você quer trabalhar conosco siga os passos abaixo:
+## Build e run
 
-* Faça um "fork" desse projeto para sua conta GitHub.
-* Implemente o desafio descrito no tópico abaixo.
-* Faça um push para seu repositório com o desafio implementado.
-* Envie um email para (rh@lemontech.com.br) avisando que finalizou o desafio com a url do seu fork.
-* Cruze os dedos e aguarde nosso contato.
+Rode um package `mvn package` e em seguida rode o .jar com o WildFly empacotado `java -jar fullstack-java-teste-swarm.jar` e basta acessar *localhost:8080*.
 
-# O desafio (Consulta de Solicitações de Viagens)
+## Docker
 
-Você deverá criar uma aplicação consumidora de nossa API de webservice para consultar solicitações de viagens e persistir em banco de dados os dados de produtos Aéreos:
+Para rodar utilizando docker é possível utilizar uma imagem já compilada e disponível no dockerhub ou construir o container localmente.
 
-Endpoint: https://treinamento.lemontech.com.br/wsselfbooking/WsSelfBookingService?wsdl
+```shell
+#docker build . -t viagem
 
-Credenciais para autenticação: Seré enviada por email para o candidato.
+docker run -d --name db -e "MYSQL_ROOT_PASSWORD=senha-mysql" mysql/mysql-server:latest
 
-Método a ser utilizado: pesquisarSolicitacao.
+docker run -d --name viagemapp -p 8080:8080 --link db:db -e "applicationkeyClient=KEYCLIENT" \
+-e "applicationUser=USERNAME" -e "applicationPassword=PASS" -e "appMysqlHost=localhost:3306" \
+-e "appMysqlDB=viagens" -e "appMysqlUser=root" -e "appMysqlPass=senha-mysql" sipmann/viagem
+```
 
-Arquitetura: Pode-se utilizar qualquer recurso da especificação JavaEE.
+Se desejar rodar o serviço juntamente com o Rabbitmq, é necessário rodar o container do rabbit (caso não possua um serviço já rodando) e em seguida adicionar as variáveis de ambiente ao docker run da app de viagem.
 
-### Requisito
+## Configuração
 
-Consultar as solicitações de viagens filtrando pelos últimos 3 meses e separar apenas as que contenham produtos Aéreos.
+A configuração da aplicação se da por viriáveis de ambiente. Para uma aplicação distribuída, o ideal é obter as configurações de um serviço especializado para tal, podendo ser um serviço Consul ou outro serviço semelhante. Esta configuração centralizada em um serviço, propicia um melhor controle geral das configs.
 
-Criar um banco de dados / tabela para persistir as informações da solicitação de viagem com as infromações básicas: Nome do Passageiro, CIA Aérea, Data/Hora de Saída e Chegada, Cidades de Origem e Destino.
+Para fins de uso simplificado, a criação das tabelas esta marcada para rodar juntamente com a aplicação e o Hibernate, mas o database já deve vir criado. Caso seja do interesse rodar a criação manualmente o script esta no repositório com o nome de create.sql.
 
-Segregar o serviço de consulta ao WS e o de persistência no BD, imaginando que poderiam estar em um ambiente distribuído e após consulta ao Webservice a viagem possa ser enviada de alguma forma para um local onde o serviço que fará a persistência faça a leitura desses objetos e efetive a gravação no banco de dados.
+Variáveis de ambiente observadas pela aplicação:
 
-Propor solução utilizando padrões e funcionalidades JavaEE.
+| Nome                  | Descrição                  | Valor  Default           |
+|-----------------------|----------------------------|-------------------------:|
+| applicationkeyClient  | keyClient do WS            | fornecido no e-mail      |
+| applicationUser       | userName do WS             | fornecido no e-mail      |
+| applicationPassword   | password do WS             | fornecido no e-mail      |
+| appMysqlHost          | Host:Porta do server mysql | localhost:3306           |
+| appMysqlDB            | banco do mysql             | viagens                  |
+| appMysqlUser          | usuario do mysql           | root                     |
+| appMysqlPass          | senha do mysql             |                          |
+| RABBITHOST            | Host do rabbit             | localhost                |
 
-### Arquitetura e documentação
+# Arquitetura
 
-No arquivo README do projeto explique o funcionamento e a arquitetura da solução adotada na sua implementação. Descreva também os passos para executar corretamente seu projeto.
+A arquitetura consistem em uma aplicação Java EE7 rodando em um servidor WildFly Swarm com persistencia de dados em um banco MySQL. Esta persistência pode se dar por meio de uma fila de requisições com RabbitMQ ou diretamente atravéz de uam DAO. Para fornecimento das páginas e endpoint de acesso, utilizou-se Spring MVC juntamente com JPA e Hibernate para impacto em banco. Um resumo das versões abaixo.
 
-### Avaliação
-
-Entre os critérios de avaliação estão:
-
-* Facilidade de configuração do projeto
-* Performance
-* Código limpo e organização
-* Documentação de código
-* Documentação do projeto (readme)
-* Arquitetura
-* Boas práticas de desenvolvimento
-* Design Patterns
+* JDK 8
+* JSP 2.1
+* Hibernate 4.3
+* Spring-Orm 4.1
+* Spring-Mvc 4.1

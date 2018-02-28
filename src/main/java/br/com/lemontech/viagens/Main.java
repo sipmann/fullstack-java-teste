@@ -2,6 +2,7 @@ package br.com.lemontech.viagens;
 
 import br.com.lemontech.config.AppWebConfiguration;
 import br.com.lemontech.config.JPAConfiguration;
+import br.com.lemontech.config.RabbitConfiguration;
 
 import javax.servlet.Filter;
 
@@ -18,7 +19,7 @@ public class Main extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { AppWebConfiguration.class, JPAConfiguration.class };
+		return new Class[] { AppWebConfiguration.class, JPAConfiguration.class, RabbitConfiguration.class };
 	}
 
 	@Override

@@ -62,6 +62,7 @@ public class ViagemService {
 
 		List<Viagem> lst = gerarViagensAPartirDe(resp.getSolicitacao());;
 		
+		persist.hi();
 		persist.armazena(lst);
 		
 		return lst;

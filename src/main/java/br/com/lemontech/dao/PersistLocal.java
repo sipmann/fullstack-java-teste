@@ -8,10 +8,7 @@ import br.com.lemontech.model.Viagem;
 import br.com.lemontech.services.PersistService;
 
 /**
- * Controller que realiza a persistencia em banco de dados do que for recebido. 
- * Pode ser transformado futuramente em uma aplicação a parte para ser chamada 
- * remotamente, podendo ser a partir de request diretamente na camada ou invocação
- * remotada de serviço do próprio Spring.
+ * Service/Dao que realiza a persistencia em banco de dados do que for recebido. 
  * @author sipmann
  *
  */
@@ -49,7 +46,7 @@ public class PersistLocal implements PersistService {
 
 	@Override
 	public void hi() {
-		System.out.println("Hello from localpersist");
+		System.out.println("Hello from PersistLocal");
 	}
 	
 }
